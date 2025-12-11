@@ -1,0 +1,48 @@
+local Lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Win = Lib.CreateLib("Luffy Menu","DarkTheme")
+
+local Tab = Win:NewTab("Timer")
+local Sec = Tab:NewSection("Running")
+local Label = Sec:NewLabel("Time: 00:00:00")
+local start = tick()
+
+task.spawn(function()
+    while task.wait(1) do
+        local t = math.floor(tick() - start)
+        Label:UpdateLabel(string.format("Time: %02d:%02d:%02d",t/3600,t/60%60,t%60))
+    end
+end)
+
+local gui = Instance.new("ScreenGui",game.CoreGui)
+gui.ResetOnSpawn = false
+local btn = Instance.new("ImageButton",gui)
+btn.Size = UDim2.new(0,60,0,60)
+btn.Position = UDim2.new(0.03,0,0.05,0)
+btn.BackgroundColor3 = Color3.fromRGB(40,40,40)
+btn.BorderSizePixel = 2
+btn.Image = "rbxassetid://10897472112"
+btn.Draggable = true
+
+local function getMain()
+    repeat
+        for _,v in ipairs(game.CoreGui:GetChildren()) do
+            if v:FindFirstChild("Main") then return v.Main end
+        end
+        task.wait()
+    until false
+end
+
+local main = getMain()
+main.Active = true
+main.Draggable = true
+local open = true
+
+btn.MouseButton1Click:Connect(function()
+    open = not open
+    main.Visible = open
+end)
+
+btn.MouseLeave:Connect(function()
+    local x = btn.Position.X.Scale
+    btn:TweenPosition(UDim2.new(x < .5 and .02 or .82,0,0.05,0))
+end)
